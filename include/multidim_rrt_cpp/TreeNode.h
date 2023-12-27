@@ -11,8 +11,6 @@ public:
     TreeNode(const std::vector<float> &val, std::shared_ptr<TreeNode> parent);
 
     void addChild(std::shared_ptr<TreeNode> child);
-
-private:
     std::vector<float> val;
     std::shared_ptr<TreeNode> parent;
     std::vector<std::shared_ptr<TreeNode>> children;
