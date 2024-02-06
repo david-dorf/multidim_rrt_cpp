@@ -1,0 +1,23 @@
+# Ignore build artifacts
+build/
+dist/
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# Ignore IDE files
+.vscode/
+.idea/
+
+# Ignore compiled binaries
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Ignore log files
+*.log
+
+# Ignore package manager files
+node_modules/
