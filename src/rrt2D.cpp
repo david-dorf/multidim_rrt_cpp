@@ -31,9 +31,9 @@ private:
   const int wall_confidence;
   std::vector<float> start_position = {start_x, start_y};
   std::vector<float> goal_position = {goal_x, goal_y};
-  std::vector<int> map_size = {100, 100};
-  TreeNode *root_node = new TreeNode(start_position, nullptr);
-  std::vector<TreeNode *> node_list = {root_node};
+  std::vector<int> map_size = {10, 10};
+  std::vector<TreeNode *> node_list;
+  TreeNode *root_node;
   nav_msgs::msg::Path path;
   rclcpp::Publisher<nav_msgs::msg::Path>::SharedPtr path_publisher;
   rclcpp::Service<std_srvs::srv::Empty>::SharedPtr rrt_service;
@@ -46,9 +46,16 @@ private:
 
   void publish_path()
   {
+    path.poses.clear();
     path.header.frame_id = "map";
     path.header.stamp = get_clock()->now();
+    RCLCPP_INFO(get_logger(), "Node list");
+    for (TreeNode *node : node_list)
+    {
+      RCLCPP_INFO(get_logger(), "Node: %f, %f", node->val[0], node->val[1]);
+    }
     TreeNode *current_node = node_list.back();
+    RCLCPP_INFO(get_logger(), "Publishing path");
     while (current_node->parent != nullptr)
     {
       geometry_msgs::msg::PoseStamped pose;
@@ -65,6 +72,12 @@ private:
   void run_rrt()
   {
     RCLCPP_INFO(get_logger(), "Running RRT");
+    TreeNode *root_node = new TreeNode(start_position, nullptr);
+    for (TreeNode *node : node_list)
+    {
+      delete node;
+    }
+    node_list = {root_node};
     while (node_list.size() < node_limit)
     {
       const float random_position_x = rand() % map_size[0];

@@ -12,7 +12,7 @@
   <arg name="node_limit" default="5000"/>
   <arg name="goal_tolerance" default="0.2"/>
   <arg name="wall_confidence" default="50"/>
-  <node name="rviz2" pkg="rviz2" exec="rviz2" args="-d $(find-pkg-share multidim_rrt_cpp)/config/rrt2Dconfig.rviz"/>
+  <node name="rviz2" pkg="rviz2" exec="rviz2" args="-d $(find-pkg-share multidim_rrt_cpp)/config/rrt2D.rviz"/>
   <node pkg="multidim_rrt_cpp" exec="map_frame_pub" if="$(eval '\'$(var example_publishers)\' == \'True\'')"/>
   <node pkg="multidim_rrt_cpp" exec="occupancy_pub" if="$(eval '\'$(var example_publishers)\' == \'True\'')"/>
   <node pkg="multidim_rrt_cpp" exec="obstacle_pub_2D" if="$(eval '\'$(var example_publishers)\' == \'True\'')"/>
