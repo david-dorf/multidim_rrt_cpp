@@ -28,6 +28,11 @@ target_compile_features(rrt2D PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++
 install(TARGETS rrt2D
   DESTINATION lib/${PROJECT_NAME})
 
+install(DIRECTORY
+  launch
+  DESTINATION share/${PROJECT_NAME}/
+)
+
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
   set(ament_cmake_copyright_FOUND TRUE)

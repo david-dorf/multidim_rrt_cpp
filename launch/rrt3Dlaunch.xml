@@ -1,0 +1,30 @@
+<launch>
+  <arg name="start_x" default="0.0"/>
+  <arg name="start_y" default="0.0"/>
+  <arg name="start_z" default="0.0"/>
+  <arg name="goal_x" default="1.0"/>
+  <arg name="goal_y" default="-1.0"/>
+  <arg name="goal_z" default="0.0"/>
+  <arg name="map_bounds_x" default="100"/>
+  <arg name="map_bounds_y" default="100"/>
+  <arg name="map_bounds_z" default="100"/>
+  <arg name="step_size" default="0.05"/>
+  <arg name="node_limit" default="5000"/>
+  <arg name="goal_tolerance" default="0.35"/>
+  <arg name="example_publishers" default="False"/>
+  <arg name="obstacle_sub_mode" default="$(eval '\'$(var example_publishers)\' == \'True\'')"/>
+  <node name="rviz2" pkg="rviz2" exec="rviz2" args="-d $(find-pkg-share multidim_rrt_cpp)/config/rrt3Dconfig.rviz"/>
+  <node pkg="multidim_rrt_cpp" exec="map_frame_pub" if="$(eval '\'$(var example_publishers)\' == \'True\'')"/>
+  <node pkg="multidim_rrt_cpp" exec="obstacle_pub_3D" if="$(eval '\'$(var example_publishers)\' == \'True\'')"/>
+  <node pkg="multidim_rrt_cpp" exec="rrt3D">
+    <param name="start_x" value="$(var start_x)"/>
+    <param name="start_y" value="$(var start_y)"/>
+    <param name="goal_x" value="$(var goal_x)"/>
+    <param name="goal_y" value="$(var goal_y)"/>
+    <param name="obstacle_sub_mode" value="$(var obstacle_sub_mode)"/>
+    <param name="step_size" value="$(var step_size)"/>
+    <param name="node_limit" value="$(var node_limit)"/>
+    <param name="goal_tolerance" value="$(var goal_tolerance)"/>
+  </node>
+</launch>
+
