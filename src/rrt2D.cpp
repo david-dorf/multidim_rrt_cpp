@@ -1,48 +1,37 @@
-#include <chrono>
-#include <functional>
-#include <memory>
-#include <string>
 #include "rclcpp/rclcpp.hpp"
-#include "std_msgs/msg/string.hpp"
-#include "visualization_msgs/msg/marker_array.hpp"
 #include "nav_msgs/msg/path.hpp"
-#include "nav_msgs/msg/occupancy_grid.hpp"
-#include "Marker.h"
 #include "TreeNode.h"
-
-using namespace std::chrono_literals;
 
 class RRT2DNode : public rclcpp::Node
 {
 public:
   RRT2DNode()
-      : Node("RRT2DNode"), start_x(0), start_y(0), goal_x(10),
-        goal_y(10), map_sub_mode(false), obstacle_sub_mode(false),
-        step_size(1.0), node_limit(10000), goal_tolerance(10.0),
-        wall_confidence(0)
+      : Node("RRT2DNode"), start_x(50), start_y(50), goal_x(90), goal_y(90), step_size(1),
+        goal_tolerance(1), map_sub_mode(false), obstacle_sub_mode(false), node_limit(10000),
+        wall_confidence(50)
   {
-    marker_publisher = create_publisher<visualization_msgs::msg::MarkerArray>("rrt_markers", 10);
+    path_publisher = create_publisher<nav_msgs::msg::Path>("path", 10);
     runRRT();
   }
 
 private:
-  float start_x;
-  float start_y;
-  float goal_x;
-  float goal_y;
-  bool map_sub_mode;
-  bool obstacle_sub_mode;
-  float step_size;
-  size_t node_limit;
-  float goal_tolerance;
-  int wall_confidence;
+  const float start_x;
+  const float start_y;
+  const float goal_x;
+  const float goal_y;
+  const float step_size;
+  const float goal_tolerance;
+  const bool map_sub_mode;
+  const bool obstacle_sub_mode;
+  const size_t node_limit;
+  const int wall_confidence;
   std::vector<float> start_position = {start_x, start_y};
   std::vector<float> goal_position = {goal_x, goal_y};
   std::vector<int> map_size = {100, 100};
   TreeNode *root_node = new TreeNode(start_position, nullptr);
   TreeNode *goal_node = new TreeNode(goal_position, nullptr);
   std::vector<TreeNode *> node_list = {root_node};
-  rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr marker_publisher;
+  rclcpp::Publisher<nav_msgs::msg::Path>::SharedPtr path_publisher;
 
   void runRRT()
   {
@@ -51,10 +40,10 @@ private:
     {
       float random_position_x = rand() % map_size[0];
       float random_position_y = rand() % map_size[1];
-      std::vector<float> random_position = {random_position_x, random_position_y};
       float min_distance = INFINITY;
+      std::vector<float> random_position = {random_position_x, random_position_y};
       std::vector<float> min_node_vec;
-      TreeNode *nearest_node = nullptr;
+      TreeNode *nearest_node;
       for (TreeNode *node : node_list)
       {
         std::vector<float> goal_vec = {goal_position[0] - node->val[0],
