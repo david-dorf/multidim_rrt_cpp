@@ -16,13 +16,13 @@ class RRT2DNode : public rclcpp::Node
 {
 public:
   RRT2DNode()
-      : Node("RRT2DNode"), start_x(0), start_y(0), goal_x(1),
-        goal_y(-1), map_sub_mode(false), obstacle_sub_mode(false),
-        step_size(0.1), node_limit(10000), goal_tolerance(0.1),
-        wall_confidence(0), count_(0)
+      : Node("RRT2DNode"), start_x(0), start_y(0), goal_x(10),
+        goal_y(-10), map_sub_mode(false), obstacle_sub_mode(false),
+        step_size(3.0), node_limit(10000), goal_tolerance(10.0),
+        wall_confidence(0)
   {
     marker_publisher = create_publisher<visualization_msgs::msg::MarkerArray>("rrt_markers", 10);
-    path_publisher = create_publisher<nav_msgs::msg::Path>("rrt_path", 10);
+    // path_publisher = create_publisher<nav_msgs::msg::Path>("rrt_path", 10);
     runRRT();
   }
 
@@ -44,18 +44,14 @@ private:
   TreeNode *goal_node = new TreeNode(goal_position, nullptr);
   std::vector<TreeNode *> node_list = {root_node};
   rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr marker_publisher;
-  rclcpp::Publisher<nav_msgs::msg::Path>::SharedPtr path_publisher;
-  rclcpp::Subscription<nav_msgs::msg::OccupancyGrid>::SharedPtr occupancy_grid_subscription;
-  rclcpp::Subscription<visualization_msgs::msg::MarkerArray>::SharedPtr obstacle_subscription;
-  rclcpp::TimerBase::SharedPtr timer_;
-  size_t count_;
 
   void runRRT()
   {
+    RCLCPP_INFO(get_logger(), "Running RRT");
     while (node_list.size() < node_limit)
     {
-      float random_position_x = static_cast<float>(rand()) / static_cast<float>(RAND_MAX / (map_size[0] * step_size));
-      float random_position_y = static_cast<float>(rand()) / static_cast<float>(RAND_MAX / (map_size[1] * step_size));
+      float random_position_x = rand() % map_size[0];
+      float random_position_y = rand() % map_size[1];
       std::vector<float> random_position = {random_position_x, random_position_y};
       float min_distance = INFINITY;
       std::vector<float> min_node_vec;
