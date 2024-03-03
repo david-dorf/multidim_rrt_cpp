@@ -1,17 +1,21 @@
 #include "rclcpp/rclcpp.hpp"
 #include "nav_msgs/msg/path.hpp"
+#include "std_srvs/srv/empty.hpp"
 #include "TreeNode.h"
 
 class RRT2DNode : public rclcpp::Node
 {
 public:
   RRT2DNode()
-      : Node("RRT2DNode"), start_x(50), start_y(50), goal_x(90), goal_y(90), step_size(1),
+      : Node("RRT2DNode"), start_x(0), start_y(0), goal_x(5), goal_y(5), step_size(0.5),
         goal_tolerance(1), map_sub_mode(false), obstacle_sub_mode(false), node_limit(10000),
         wall_confidence(50)
   {
     path_publisher = create_publisher<nav_msgs::msg::Path>("path", 10);
-    run_rrt();
+    rrt_service = create_service<std_srvs::srv::Empty>("run_rrt",
+                                                       std::bind(&RRT2DNode::rrt_service_callback,
+                                                                 this, std::placeholders::_1,
+                                                                 std::placeholders::_2));
   }
 
 private:
@@ -32,6 +36,13 @@ private:
   std::vector<TreeNode *> node_list = {root_node};
   nav_msgs::msg::Path path;
   rclcpp::Publisher<nav_msgs::msg::Path>::SharedPtr path_publisher;
+  rclcpp::Service<std_srvs::srv::Empty>::SharedPtr rrt_service;
+
+  void rrt_service_callback(std_srvs::srv::Empty::Request::SharedPtr,
+                            std_srvs::srv::Empty::Response::SharedPtr)
+  {
+    run_rrt();
+  }
 
   void publish_path()
   {
@@ -41,6 +52,8 @@ private:
     while (current_node->parent != nullptr)
     {
       geometry_msgs::msg::PoseStamped pose;
+      pose.header.frame_id = "map";
+      pose.header.stamp = get_clock()->now();
       pose.pose.position.x = current_node->val[0];
       pose.pose.position.y = current_node->val[1];
       path.poses.push_back(pose);

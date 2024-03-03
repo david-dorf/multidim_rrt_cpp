@@ -11,12 +11,14 @@ find_package(rclcpp_components REQUIRED)
 find_package(rmw REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(nav_msgs REQUIRED)
+find_package(std_srvs REQUIRED)
 find_package(visualization_msgs REQUIRED)
 
 add_executable(rrt2D src/rrt2D.cpp)
 ament_target_dependencies(rrt2D rclcpp)
 ament_target_dependencies(rrt2D std_msgs)
 ament_target_dependencies(rrt2D nav_msgs)
+ament_target_dependencies(rrt2D std_srvs)
 ament_target_dependencies(rrt2D visualization_msgs)
 
 target_include_directories(rrt2D PUBLIC
