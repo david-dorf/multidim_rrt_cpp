@@ -1,28 +1,8 @@
 # Multi-dimensional RRT Planner (C++)
-
-
-
-https://github.com/daviddorf2023/multidim_rrt_cpp/assets/113081373/aa86d868-60b6-4ef3-bab0-41f6b107a4ee
-
-
-
-
-## Authors and Contributors
 Author: David Dorf
 
 ## Description
-3D and 2D implementation of Rapid Exploring Random Tree algorithms for ROS 2 in C++. This is a work-in-progress project stemming off of my Python implementation: https://github.com/daviddorf2023/multidim_rrt_planner. Not every feature mentioned in this readme has been added yet. The main ROS 2 nodes are rrt2D and rrt3D, which can take user inputs and publish the nodes of the RRT and the path to the goal. The ROS 2 nodes are currently in development. The nodes can subscribe to topics for map data, marker obstacles, and can be launched with rrt2Dlaunch.xml and rrt3Dlaunch.xml, respectively.
+3D and 2D implementation of Rapid Exploring Random Tree algorithms for ROS 2 in C++. This is a lightweight, performant version of my Python implementation: https://github.com/daviddorf2023/multidim_rrt_planner. Given a start and goal pose, the algorithm attempts to publish a path using the RRT algorithm when the `run_rrt` service is called. The main ROS 2 nodes are rrt2D and rrt3D, which can take user inputs and publish the nodes of the RRT and the path to the goal. The nodes can be launched with RViz by using `rrt2Dlaunch.xml` and `rrt3Dlaunch.xml`.
 
 ## Installation
-### Dependencies
-* ROS 2 Iron
-* Eigen 3.4.0
-### Building
-Clone the repository into your ROS 2 workspace and build with colcon build.
-
-## Usage
-### ROS 2 Nodes
-#### rrt2D
-rrt2D is a ROS 2 node that implements the RRT algorithm in 2D. It can be launched with the rrt2Dlaunch.xml file. The node subscribes to the /occupancy_grid topic for map data and the /obstacle_markers_2D topic for marker obstacles. The node publishes the nodes of the RRT to the /rrt_markers topic and the path to the goal to the /rrt_path topic.
-#### rrt3D
-rrt3D is a ROS 2 node that implements the RRT algorithm in 3D. It can be launched with the rrt3Dlaunch.xml file. The node subscribes to the /occupancy_grid topic for map data and the /obstacle_markers_3D topic for marker obstacles. The node publishes the nodes of the RRT to the /rrt_markers topic and the path to the goal to the /rrt_path topic.
+Clone the repository into your ROS 2 workspace and build with `colcon build`, then source your install directory, and launch one of the launch files. More information can be found here: https://docs.ros.org/en/iron/Tutorials/Beginner-Client-Libraries/Creating-Your-First-ROS2-Package.html.
