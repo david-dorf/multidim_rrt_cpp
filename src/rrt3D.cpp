@@ -7,9 +7,9 @@ class RRT2DNode : public rclcpp::Node
 {
 public:
   RRT2DNode()
-      : Node("RRT2DNode"), start_x(0), start_y(0), goal_x(5), goal_y(5), step_size(0.5),
-        goal_tolerance(1), map_sub_mode(false), obstacle_sub_mode(false), node_limit(10000),
-        wall_confidence(50)
+      : Node("RRT2DNode"), start_x(0), start_y(0), start_z(0), goal_x(5), goal_y(5), goal_z(5),
+        step_size(0.5), goal_tolerance(1), map_sub_mode(false), obstacle_sub_mode(false),
+        node_limit(10000), wall_confidence(50)
   {
     path_publisher = create_publisher<nav_msgs::msg::Path>("path", 10);
     rrt_service = create_service<std_srvs::srv::Empty>("run_rrt",
@@ -21,17 +21,19 @@ public:
 private:
   const float start_x;
   const float start_y;
+  const float start_z;
   const float goal_x;
   const float goal_y;
+  const float goal_z;
   const float step_size;
   const float goal_tolerance;
   const bool map_sub_mode;
   const bool obstacle_sub_mode;
   const size_t node_limit;
   const int wall_confidence;
-  std::vector<float> start_position = {start_x, start_y};
-  std::vector<float> goal_position = {goal_x, goal_y};
-  std::vector<int> map_size = {10, 10};
+  std::vector<float> start_position = {start_x, start_y, start_z};
+  std::vector<float> goal_position = {goal_x, goal_y, goal_z};
+  std::vector<int> map_size = {10, 10, 10};
   std::vector<TreeNode *> node_list;
   TreeNode *root_node;
   nav_msgs::msg::Path path;
@@ -51,6 +53,7 @@ private:
       pose.header.stamp = get_clock()->now();
       pose.pose.position.x = current_node->val[0];
       pose.pose.position.y = current_node->val[1];
+      pose.pose.position.z = current_node->val[2];
       path.poses.push_back(pose);
       current_node = current_node->parent;
     }
@@ -71,6 +74,7 @@ private:
     {
       const float rand_x = rand() % map_size[0];
       const float rand_y = rand() % map_size[1];
+      const float rand_z = rand() % map_size[2];
       float min_distance = INFINITY;
       std::vector<float> min_node_vec;
       TreeNode *nearest_node;
@@ -89,7 +93,8 @@ private:
           return;
         }
         std::vector<float> node_vec = {node->val[0] - rand_x,
-                                       node->val[1] - rand_y};
+                                       node->val[1] - rand_y,
+                                       node->val[2] - rand_z};
         const float distance = sqrt(pow(node_vec[0], 2) + pow(node_vec[1], 2));
         if (distance < min_distance)
         {
@@ -100,7 +105,8 @@ private:
       }
       const float new_node_x = nearest_node->val[0] - (min_node_vec[0] / min_distance) * step_size;
       const float new_node_y = nearest_node->val[1] - (min_node_vec[1] / min_distance) * step_size;
-      std::vector<float> new_node_position = {new_node_x, new_node_y};
+      const float new_node_z = nearest_node->val[2] - (min_node_vec[2] / min_distance) * step_size;
+      std::vector<float> new_node_position = {new_node_x, new_node_y, new_node_z};
       TreeNode *new_node = new TreeNode(new_node_position, nearest_node);
       nearest_node->add_child(new_node);
       node_list.push_back(new_node);

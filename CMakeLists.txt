@@ -21,6 +21,13 @@ ament_target_dependencies(rrt2D nav_msgs)
 ament_target_dependencies(rrt2D std_srvs)
 ament_target_dependencies(rrt2D visualization_msgs)
 
+add_executable(rrt3D src/rrt3D.cpp)
+ament_target_dependencies(rrt3D rclcpp)
+ament_target_dependencies(rrt3D std_msgs)
+ament_target_dependencies(rrt3D nav_msgs)
+ament_target_dependencies(rrt3D std_srvs)
+ament_target_dependencies(rrt3D visualization_msgs)
+
 target_include_directories(rrt2D PUBLIC
   ${CMAKE_SOURCE_DIR}/include/multidim_rrt_cpp
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -28,6 +35,15 @@ target_include_directories(rrt2D PUBLIC
 target_compile_features(rrt2D PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
 
 install(TARGETS rrt2D
+  DESTINATION lib/${PROJECT_NAME})
+
+target_include_directories(rrt3D PUBLIC
+  ${CMAKE_SOURCE_DIR}/include/multidim_rrt_cpp
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>)
+target_compile_features(rrt3D PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
+
+install(TARGETS rrt3D
   DESTINATION lib/${PROJECT_NAME})
 
 install(DIRECTORY

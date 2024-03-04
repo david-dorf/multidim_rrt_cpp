@@ -13,7 +13,7 @@
   <arg name="goal_tolerance" default="0.35"/>
   <arg name="example_publishers" default="False"/>
   <arg name="obstacle_sub_mode" default="$(eval '\'$(var example_publishers)\' == \'True\'')"/>
-  <node name="rviz2" pkg="rviz2" exec="rviz2" args="-d $(find-pkg-share multidim_rrt_cpp)/config/rrt3Dconfig.rviz"/>
+  <node name="rviz2" pkg="rviz2" exec="rviz2" args="-d $(find-pkg-share multidim_rrt_cpp)/config/rrt2D.rviz"/>
   <node pkg="multidim_rrt_cpp" exec="map_frame_pub" if="$(eval '\'$(var example_publishers)\' == \'True\'')"/>
   <node pkg="multidim_rrt_cpp" exec="obstacle_pub_3D" if="$(eval '\'$(var example_publishers)\' == \'True\'')"/>
   <node pkg="multidim_rrt_cpp" exec="rrt3D">
