@@ -81,8 +81,11 @@ private:
       for (TreeNode *node : node_list)
       {
         std::vector<float> goal_vec = {goal_position[0] - node->val[0],
-                                       goal_position[1] - node->val[1]};
-        const float goal_distance = sqrt(pow(goal_vec[0], 2) + pow(goal_vec[1], 2));
+                                       goal_position[1] - node->val[1],
+                                       goal_position[2] - node->val[2]};
+        const float goal_distance = sqrt(pow(goal_vec[0], 2) +
+                                         pow(goal_vec[1], 2) +
+                                         pow(goal_vec[2], 2));
         if (goal_distance < goal_tolerance)
         {
           TreeNode *goal_node = new TreeNode(goal_position, node);
@@ -95,7 +98,9 @@ private:
         std::vector<float> node_vec = {node->val[0] - rand_x,
                                        node->val[1] - rand_y,
                                        node->val[2] - rand_z};
-        const float distance = sqrt(pow(node_vec[0], 2) + pow(node_vec[1], 2));
+        const float distance = sqrt(pow(node_vec[0], 2) +
+                                    pow(node_vec[1], 2) +
+                                    pow(node_vec[2], 2));
         if (distance < min_distance)
         {
           min_node_vec = node_vec;
