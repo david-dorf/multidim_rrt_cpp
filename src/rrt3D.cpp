@@ -3,17 +3,17 @@
 #include "std_srvs/srv/empty.hpp"
 #include "TreeNode.h"
 
-class RRT2DNode : public rclcpp::Node
+class RRT3DNode : public rclcpp::Node
 {
 public:
-  RRT2DNode()
-      : Node("RRT2DNode"), start_x(0), start_y(0), start_z(0), goal_x(5), goal_y(5), goal_z(5),
+  RRT3DNode()
+      : Node("RRT3DNode"), start_x(0), start_y(0), start_z(0), goal_x(5), goal_y(5), goal_z(5),
         step_size(0.5), goal_tolerance(1), map_sub_mode(false), obstacle_sub_mode(false),
         node_limit(10000), wall_confidence(50)
   {
     path_publisher = create_publisher<nav_msgs::msg::Path>("path", 10);
     rrt_service = create_service<std_srvs::srv::Empty>("run_rrt",
-                                                       std::bind(&RRT2DNode::rrt_service_callback,
+                                                       std::bind(&RRT3DNode::rrt_service_callback,
                                                                  this, std::placeholders::_1,
                                                                  std::placeholders::_2));
   }
@@ -119,7 +119,7 @@ private:
 int main(int argc, char *argv[])
 {
   rclcpp::init(argc, argv);
-  rclcpp::spin(std::make_shared<RRT2DNode>());
+  rclcpp::spin(std::make_shared<RRT3DNode>());
   rclcpp::shutdown();
   return 0;
 }
